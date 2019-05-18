@@ -8,8 +8,8 @@ const privateKey = ec.genKeyPair()
 
 const address = new Address(privateKey, { prefix: 'ckt' }) // the ckt is the signal for testnet
 
-console.log('privateKey: ', privateKey);
-console.log('address: ', address);
+console.log('privateKey: ', '0x'+address.getPrivateKey());
+console.log('address: ', address.value);
 
   /**
    * Generate script code for mining
@@ -75,10 +75,10 @@ const bootstrap = async () => {
 
   const script = {
     codeHash: SYSTEM_ENCRYPTION_CODE_HASH,
-    args: [blake160edPublicKey],
+    args: ["0x" + blake160edPublicKey],
   }
 
-  console.log('script: ', script)
+  console.log('\nscript: ', script)
 }
 
 bootstrap()
