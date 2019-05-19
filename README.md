@@ -5,6 +5,10 @@ Please use latest node to execute the file, which should support async/await, Ar
 
 ## Install dependencies
 ```js
+npm
+```
+or
+```js
 yarn
 ```
 
