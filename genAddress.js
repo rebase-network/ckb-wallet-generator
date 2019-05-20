@@ -31,24 +31,6 @@ const bootstrap = async () => {
   const SYSTEM_ENCRYPTION_CODE_HASH = core.rpc.paramsFormatter.toHash(systemCellInfo.codeHash)
 
   /**
-   * const SYSTEM_ENCRYPTION_OUT_POINT = {
-   *   blockHash: '0x92968288728fc0901b2ed94611fcf668db7d15842f019674e0805dffd26dadd5',
-   *   cell: {
-   *     txHash: '0x7c77c04b904bd937bd371ab0d413ed6eb887661e2484bc198aca6934ba5ea4e3',
-   *     index: '1',
-   *   },
-   * }
-   */
-
-  const SYSTEM_ENCRYPTION_OUT_POINT = {
-    blockHash: core.rpc.paramsFormatter.toHash(systemCellInfo.outPoint.blockHash),
-    cell: {
-      txHash: core.rpc.paramsFormatter.toHash(systemCellInfo.outPoint.cell.txHash),
-      index: systemCellInfo.outPoint.cell.index,
-    },
-  }
-
-  /**
    * calculate the lockhash by the address
    * 1. a blake160-ed public key is required in the args field of lock script
    * 2. compose the lock script with SYSTEM_ENCRYPTION_CODE_HASH, and args
@@ -57,10 +39,7 @@ const bootstrap = async () => {
 
   const blake160edPublicKey = core.utils.blake160(address.publicKey, 'hex')
 
-  /**
-   * to see the blake160-ed public key
-   */
-  // console.log(blake160edPublicKey)
+  console.log('blake160: ', '0x' + blake160edPublicKey)
 
   const script = {
     codeHash: SYSTEM_ENCRYPTION_CODE_HASH,
