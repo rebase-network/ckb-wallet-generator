@@ -7,7 +7,7 @@ const ec = new EC('secp256k1')
 const key = ec.genKeyPair()
 
 const encoder = new TextEncoder(); // node version ≥ 11.0.0
-const CKB_PERSONAL = encoder.encode('ckb-default-hash');
+const CKB_BLAKE_PERSONAL = encoder.encode('ckb-default-hash');
 
 const address = new Address(key, {prefix: 'ckt'}) // the ckt is the signal for testnet
 
@@ -24,7 +24,7 @@ function blake160(data, encode) {
   }
 
   var formattedData = typeof data === 'string' ? hexToBytes(data) : data;
-  var s = blake2b(32, null, null, CKB_PERSONAL);
+  var s = blake2b(32, null, null, CKB_BLAKE_PERSONAL);  // blake2b(digestLength, key, salt, personal)
   s.update(formattedData);
   return s.digest(encode).slice(0, encode === 'binary' ? 20 : 40);
 };
