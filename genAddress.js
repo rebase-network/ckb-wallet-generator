@@ -3,12 +3,12 @@ const Core = require('@nervosnetwork/ckb-sdk-core').default
 const Address = require('@nervosnetwork/ckb-sdk-address').default
 
 const ec = new EC('secp256k1')
+const key = ec.genKeyPair()
 
-const privateKey = ec.genKeyPair()
+const address = new Address(key, { prefix: 'ckt' }) // the ckt is the signal for testnet
 
-const address = new Address(privateKey, { prefix: 'ckt' }) // the ckt is the signal for testnet
-
-console.log('privateKey: ', '0x'+address.getPrivateKey());
+console.log('privateKey: ', '0x' + address.getPrivateKey());
+console.log('publicKey: ', '0x' + address.publicKey);
 console.log('address: ', address.value);
 
   /**
@@ -31,51 +31,19 @@ const bootstrap = async () => {
   const SYSTEM_ENCRYPTION_CODE_HASH = core.rpc.paramsFormatter.toHash(systemCellInfo.codeHash)
 
   /**
-   * const SYSTEM_ENCRYPTION_OUT_POINT = {
-   *   blockHash: '0x92968288728fc0901b2ed94611fcf668db7d15842f019674e0805dffd26dadd5',
-   *   cell: {
-   *     txHash: '0x7c77c04b904bd937bd371ab0d413ed6eb887661e2484bc198aca6934ba5ea4e3',
-   *     index: '1',
-   *   },
-   * }
-   */
-  const SYSTEM_ENCRYPTION_OUT_POINT = {
-    blockHash: core.rpc.paramsFormatter.toHash(systemCellInfo.outPoint.blockHash),
-    cell: {
-      txHash: core.rpc.paramsFormatter.toHash(systemCellInfo.outPoint.cell.txHash),
-      index: systemCellInfo.outPoint.cell.index,
-    },
-  }
-
-  /**
-   * genereat address object, who has peroperties like private key, public key, sign method and verify mehtod
-   * - value, the address string
-   * - privateKey, the private key in hex string format
-   * - publicKey, the public key in hex string format
-   * - sign(msg): signature string
-   * - verify(msg, signature): boolean
-   */
-  const myAddressObj = core.generateAddress(privateKey)
-  /**
-   * to see the address
-   */
-  // console.log(myAddressObj.value)
-
-  /**
    * calculate the lockhash by the address
    * 1. a blake160-ed public key is required in the args field of lock script
    * 2. compose the lock script with SYSTEM_ENCRYPTION_CODE_HASH, and args
    * 3. calculate the hash of lock script
    */
-  const blake160edPublicKey = core.utils.blake160(myAddressObj.publicKey, 'hex')
-  /**
-   * to see the blake160-ed public key
-   */
-  // console.log(blake160edPublicKey)
+
+  const blake160edPublicKey = core.utils.blake160(address.publicKey, 'hex')
+
+  console.log('blake160: ', '0x' + blake160edPublicKey)
 
   const script = {
     codeHash: SYSTEM_ENCRYPTION_CODE_HASH,
-    args: ["0x" + blake160edPublicKey],
+    args: ['0x' + blake160edPublicKey],
   }
 
   console.log('\nscript: ', script)
